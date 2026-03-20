@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/Login';
 import HomePage from './pages/Home';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // 1. Component bảo vệ Route (Hợp thức hóa việc có Token mới cho vào Dashboard)
 interface ProtectedRouteProps {
@@ -22,12 +24,14 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 function App() {
 return (
     <Router>
+      <ToastContainer position="top-right" autoClose={2000} />
       <Routes>
+        
         <Route path="/login" element={<LoginPage />} />
         
         {/* Route cho Trang Chủ */}
         <Route 
-          path="/home" 
+          path="/" 
           element={
             <ProtectedRoute>
               <HomePage />
@@ -36,7 +40,7 @@ return (
         />
 
         {/* Mặc định vào sẽ đá sang /home */}
-        <Route path="*" element={<Navigate to="/home" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

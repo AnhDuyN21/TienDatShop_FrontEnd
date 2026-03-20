@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { loginApi } from '../api/auth';
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 
 export const useAuth = () => {
@@ -16,10 +17,11 @@ export const useAuth = () => {
       const token = response.data;
       if(token) {
         localStorage.setItem('token', token);
-        navigate('/home');
+         toast.success("Đăng nhập thành công ");
+        navigate('/');
       }
     } catch (err : any) {
-      setError(err.response?.data?.message || "Đăng nhập thất bại");
+       toast.error("Sai tài khoản hoặc mật khẩu");
     } finally {
       setLoading(false);
     }
