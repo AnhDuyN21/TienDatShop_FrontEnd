@@ -20,11 +20,15 @@ export const useProductList  = () => {
 }
 
 export const useProductDetail = (id: number) => {
-  const [product, setProduct] = useState<Product>();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getProductByIdApi(id).then(res => setProduct(res.data));
+    setLoading(true);
+    getProductByIdApi(id)
+      .then((res) => setProduct(res.data))
+      .finally(() => setLoading(false));
   }, [id]);
 
-  return { product };
+  return { product, loading };
 };
