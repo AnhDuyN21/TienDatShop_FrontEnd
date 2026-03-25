@@ -8,3 +8,6 @@ export const loginApi = (loginRequest: LoginRequest) => {
   },
   });
 };
+export const getMeApi = () => {
+  return axiosClient.get('/api/auth/me');
+};

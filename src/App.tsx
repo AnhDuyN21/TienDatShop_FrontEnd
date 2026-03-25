@@ -4,6 +4,7 @@ import HomePage from './pages/Home';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProductDetailPage from './pages/ProductDetail';
+import CartPage from './pages/Cart';
 
 // 1. Component bảo vệ Route (Hợp thức hóa việc có Token mới cho vào Dashboard)
 interface ProtectedRouteProps {
@@ -40,6 +41,7 @@ return (
           } 
         />
         <Route path="/products/:id" element={<ProductDetailPage />} />
+        <Route path="/cart" element={<CartPage />} />
         {/* Mặc định vào sẽ đá sang /home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

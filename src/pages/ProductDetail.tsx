@@ -5,6 +5,8 @@ import { MainLayout } from "../components/layout/MainLayout";
 import { useProductDetail } from "../hooks/useProduct";
 import { Button } from "../components/ui/Button";
 import { Breadcrumb } from "../components/ui/Breadcrumb";
+import { useAddToCart } from "../hooks/useCart";
+
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -12,7 +14,9 @@ export default function ProductDetailPage() {
 
   return (
     <MainLayout>
-      {loading ? <DetailSkeleton /> : product ? <ProductDetail product={product} /> : (
+      {loading ? <DetailSkeleton /> : product ? (
+        <ProductDetail product={product} />
+      ) : (
         <p className="text-center mt-40 text-gray-400">Không tìm thấy sản phẩm</p>
       )}
     </MainLayout>
@@ -22,16 +26,16 @@ export default function ProductDetailPage() {
 const ProductDetail = ({ product }: { product: any }) => {
   const [selectedImg, setSelectedImg] = useState(0);
   const [qty, setQty] = useState(1);
+  const { addToCart, loading: addToCartLoading } = useAddToCart(); // 👈 chuyển vào đây
 
   return (
     <div className="max-w-4xl mx-auto px-5 pt-24 pb-16">
-      {/* Breadcrumb */}
-        <Breadcrumb
+      <Breadcrumb
         items={[
-            { label: "Trang chủ", path: "/" },
-            { label: product.name }, 
+          { label: "Trang chủ", path: "/" },
+          { label: product.name },
         ]}
-        />
+      />
 
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <div className="grid md:grid-cols-2">
@@ -44,7 +48,6 @@ const ProductDetail = ({ product }: { product: any }) => {
                 className="w-full h-full object-cover"
               />
             </div>
-            {/* Thumbnails */}
             <div className="flex gap-2 mt-3">
               {product.images?.map((img: string, i: number) => (
                 <button
@@ -76,7 +79,6 @@ const ProductDetail = ({ product }: { product: any }) => {
 
             <hr className="border-gray-100 mb-4" />
 
-            {/* Giá */}
             <div className="flex items-baseline gap-2 mb-2">
               <span className="text-3xl font-semibold text-green-700">
                 {product.price.toLocaleString("vi-VN")}đ
@@ -84,7 +86,6 @@ const ProductDetail = ({ product }: { product: any }) => {
               <span className="text-sm text-gray-400">/ {product.weight}g</span>
             </div>
 
-            {/* Tồn kho */}
             <div className="flex items-center gap-2 mb-5">
               <div className="w-2 h-2 rounded-full bg-green-500" />
               <span className="text-sm text-green-700">
@@ -92,12 +93,10 @@ const ProductDetail = ({ product }: { product: any }) => {
               </span>
             </div>
 
-            {/* Mô tả */}
             <p className="text-sm text-gray-500 bg-gray-50 rounded-xl px-4 py-3 leading-relaxed mb-5">
               {product.description}
             </p>
 
-            {/* Số lượng */}
             <div className="flex items-center gap-4 mb-4">
               <span className="text-sm text-gray-500">Số lượng</span>
               <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
@@ -115,11 +114,13 @@ const ProductDetail = ({ product }: { product: any }) => {
               </div>
             </div>
 
-                <Button >
-                Thêm vào giỏ hàng
-                </Button>
+            <Button
+              disabled={addToCartLoading}
+              onClick={() => addToCart(product.id, qty, product.price)}
+            >
+              {addToCartLoading ? "Đang thêm..." : "Thêm vào giỏ hàng"}
+            </Button>
 
-            {/* Chi tiết */}
             <div className="mt-5 grid grid-cols-2 border border-gray-100 rounded-xl overflow-hidden text-sm">
               {[
                 ["Thành phần", product.ingredients],
@@ -134,7 +135,6 @@ const ProductDetail = ({ product }: { product: any }) => {
               ))}
             </div>
 
-            {/* Trust badges */}
             <div className="flex justify-around mt-5 pt-4 border-t border-gray-100">
               {[["🚚", "Giao hàng nhanh"], ["✓", "Hàng chính hãng"], ["↩", "Đổi trả 7 ngày"]].map(([icon, txt]) => (
                 <div key={txt} className="flex flex-col items-center gap-1">
@@ -150,7 +150,6 @@ const ProductDetail = ({ product }: { product: any }) => {
   );
 };
 
-// ── Skeleton ──────────────────────────────────────────────
 const DetailSkeleton = () => (
   <div className="max-w-4xl mx-auto px-5 pt-24 animate-pulse">
     <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">

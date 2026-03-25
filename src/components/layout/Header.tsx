@@ -23,7 +23,7 @@ export const Header = () => {
           </>
         )}
 
-      <div className="relative">
+      <div className="relative cursor-pointer" onClick={() => navigate("/cart")}>
         🛒
         <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">
          
